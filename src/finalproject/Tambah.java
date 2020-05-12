@@ -22,7 +22,7 @@ public class Tambah extends javax.swing.JFrame {
     private Statement stat;
     private PreparedStatement pst;
     String sql;
-    int pegawai, barang;
+    int transaksi, barang, jumlah;
     private DefaultTableModel isitabel=new DefaultTableModel(){
         @Override
         public boolean isCellEditable(int row, int column){
@@ -33,9 +33,9 @@ public class Tambah extends javax.swing.JFrame {
     /**
      * Creates new form Tambah
      */
-    public Tambah(int pegawai) {
+    public Tambah(int transaksi) {
         initComponents();
-        this.pegawai = pegawai;
+        this.transaksi = transaksi;
         isitabel.addColumn("No");
         isitabel.addColumn("ID Barang");
         isitabel.addColumn("Barang");
@@ -207,23 +207,38 @@ public class Tambah extends javax.swing.JFrame {
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
         // TODO add your handling code here:
-        if(evt.getClickCount()==2){
             int row = jTable1.getSelectedRow();
             this.barang = Integer.parseInt(jTable1.getValueAt(row, 1).toString());
             jLabel4.setText(jTable1.getValueAt(row, 2).toString());
-        }
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         try{
-            sql = "insert into transaksi value(null,"
-                    + this.pegawai + ",now()," 
-                    + this.barang + "," 
+            stat=con.createStatement();
+            sql = "select * from detail where id_barang = "
+                    + this.barang + " and id_transaksi = " 
+                    + this.transaksi + ";";
+            res=stat.executeQuery(sql);
+            if(res.next()){
+                this.jumlah = res.getInt("jumlah");
+                jumlah = jumlah + Integer.parseInt(jTextField2.getText());
+                sql = "update detail set jumlah = "
+                        + this.jumlah + " where id_barang = "
+                        + this.barang + " and id_transaksi = " 
+                        + this.transaksi + ";";
+                pst = con.prepareStatement(sql);
+                pst.execute();
+                dispose();
+            }else{
+                sql = "insert into detail value(null,"
+                    + this.transaksi + "," 
+                    + this.barang + ","
                     + Integer.parseInt(jTextField2.getText()) + ")";
             pst = con.prepareStatement(sql);
             pst.execute();
             dispose();
+            }
         }catch(Exception e){
             JOptionPane.showMessageDialog(null,"Terjadi Permasalahan di "+e);
         }

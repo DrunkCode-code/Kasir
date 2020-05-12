@@ -23,7 +23,7 @@ public class Kasir extends javax.swing.JFrame {
     private Statement stat;
     private PreparedStatement pst;
     String sql, barang;
-    int pegawai, i, jumlah, harga, total, banyak, transaksi;
+    int pegawai, i, jumlah, harga, total, banyak, transaksi, idbarang;
     
     private void tampildata(){
         DefaultTableModel isitabel=new DefaultTableModel(){
@@ -33,7 +33,6 @@ public class Kasir extends javax.swing.JFrame {
             }
         };
         isitabel.addColumn("No");
-        isitabel.addColumn("Kode Transaksi");
         isitabel.addColumn("Kode Barang");
         isitabel.addColumn("Nama Barang");
         isitabel.addColumn("Harga");
@@ -45,15 +44,16 @@ public class Kasir extends javax.swing.JFrame {
             total=0;
             banyak=0;
             stat=con.createStatement();
-            sql = "select * from transaksi as t inner join barang as b on t.id_barang=b.id_barang inner join type as ty on b.id_type=ty.id_type;";
+            sql = "select * from detail as d inner join barang as b on d.id_barang=b.id_barang inner join type as ty on b.id_type=ty.id_type where d.id_transaksi = "
+                    + this.transaksi + ";";
             res=stat.executeQuery(sql);
             while(res.next()){
-                jumlah = Integer.parseInt(res.getString("t.jumlah"));
+                jumlah = Integer.parseInt(res.getString("d.jumlah"));
                 harga = Integer.parseInt(res.getString("b.harga_jual"));
                 i++;
                 total = total + (harga*jumlah);
                 banyak = banyak + jumlah;
-                isitabel.addRow(new Object[]{i, res.getString("t.id_transaksi"),res.getString("t.id_barang"), 
+                isitabel.addRow(new Object[]{i, res.getString("d.id_barang"), 
                     res.getString("b.nama_barang"), harga, jumlah, 
                     res.getString("ty.nama_type"), (harga*jumlah)});
             }
@@ -73,13 +73,19 @@ public class Kasir extends javax.swing.JFrame {
         this.pegawai=pegawai;
         try{
             stat=con.createStatement();
-            sql = "select * from pegawai where id_pegawai = " + pegawai + ";";
+            sql = "select * from pegawai where id_pegawai = " + this.pegawai + ";";
             res=stat.executeQuery(sql);
             res.next();
             jLabel2.setText(res.getString("nama_pegawai"));
+            sql = "select * from transaksi order by id_transaksi desc limit 1 ";
+            res=stat.executeQuery(sql);
+            res.next();
+            this.transaksi = res.getInt("id_transaksi");
+            jLabel12.setText(Integer.toString(this.transaksi));
         }catch(Exception e){
             JOptionPane.showMessageDialog(null,"Terjadi Permasalahan di "+e);
         }
+        
             
     }
 
@@ -111,6 +117,8 @@ public class Kasir extends javax.swing.JFrame {
         jLabel10 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
         jButton4 = new javax.swing.JButton();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowFocusListener(new java.awt.event.WindowFocusListener() {
@@ -239,6 +247,10 @@ public class Kasir extends javax.swing.JFrame {
             }
         });
 
+        jLabel11.setText("No Transaksi : ");
+
+        jLabel12.setText("TRANSAKSI");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -279,8 +291,13 @@ public class Kasir extends javax.swing.JFrame {
                                 .addGap(143, 143, 143))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(60, 60, 60)))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel11)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jLabel12))
+                                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(38, 38, 38)))
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(89, 89, 89)
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -297,7 +314,12 @@ public class Kasir extends javax.swing.JFrame {
                 .addGap(45, 45, 45)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel11)
+                            .addComponent(jLabel12)))
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(21, 21, 21)
                 .addComponent(jLabel7)
@@ -324,7 +346,7 @@ public class Kasir extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        new Tambah(pegawai).setVisible(true);
+        new Tambah(transaksi).setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void formWindowGainedFocus(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowGainedFocus
@@ -337,8 +359,9 @@ public class Kasir extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         try{
-            sql = "delete from transaksi where id_transaksi = "
-                    + transaksi + ";";
+            sql = "delete from detail where id_barang = "
+                    + this.idbarang + " and id_transaksi = " 
+                    + this.transaksi + ";";
             pst = con.prepareStatement(sql);
             pst.execute();
             JOptionPane.showMessageDialog(null,"Data Berhasil Dihapus");
@@ -350,8 +373,8 @@ public class Kasir extends javax.swing.JFrame {
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
         // TODO add your handling code here:
         int row = jTable1.getSelectedRow();
-        this.transaksi = Integer.parseInt(jTable1.getValueAt(row, 1).toString());
-        this.barang = jTable1.getValueAt(row, 3).toString();
+        this.idbarang = Integer.parseInt(jTable1.getValueAt(row, 1).toString());
+        this.barang = jTable1.getValueAt(row, 2).toString();
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
@@ -361,7 +384,7 @@ public class Kasir extends javax.swing.JFrame {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
-        new Edit(transaksi, barang).setVisible(true);
+        new Edit(transaksi, barang, idbarang).setVisible(true);
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jTextField1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyReleased
@@ -380,6 +403,8 @@ public class Kasir extends javax.swing.JFrame {
     private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;

@@ -20,17 +20,18 @@ public class Edit extends javax.swing.JFrame {
     private ResultSet res;
     private Statement stat;
     private PreparedStatement pst;
-    int transaksi;
+    int transaksi, idbarang;
     String sql, barang;
     
 
     /**
      * Creates new form Edit
      */
-    public Edit(int transaksi, String barang) {
+    public Edit(int transaksi, String barang, int idbarang) {
         initComponents();
         this.transaksi = transaksi;
         this.barang = barang;
+        this.idbarang = idbarang;
         jLabel4.setText(barang);
     }
 
@@ -114,9 +115,10 @@ public class Edit extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         try{
-        sql = "update transaksi set jumlah = "
-                + Integer.parseInt(jTextField1.getText()) + " where id_transaksi = "
-                + this.transaksi +";";
+        sql = "update detail set jumlah = "
+                + Integer.parseInt(jTextField1.getText()) + " where id_barang = "
+                + this.idbarang + " and id_transaksi = " 
+                + this.transaksi + ";";
         pst = con.prepareStatement(sql);
         pst.execute();
         dispose();

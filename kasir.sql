@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 08, 2020 at 07:11 AM
+-- Generation Time: May 12, 2020 at 05:08 AM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.2
 
@@ -43,6 +43,29 @@ CREATE TABLE `barang` (
 
 INSERT INTO `barang` (`id_barang`, `nama_barang`, `id_type`, `harga_beli`, `harga_jual`, `stock`) VALUES
 (1, 'Buku', 1, 2500, 4000, 20);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `detail`
+--
+
+CREATE TABLE `detail` (
+  `id_detail` int(11) NOT NULL,
+  `id_transaksi` int(11) DEFAULT NULL,
+  `id_barang` int(11) DEFAULT NULL,
+  `jumlah` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `detail`
+--
+
+INSERT INTO `detail` (`id_detail`, `id_transaksi`, `id_barang`, `jumlah`) VALUES
+(1, 44, 1, 10),
+(5, 60, 1, 5),
+(6, 61, 1, 2),
+(10, 63, 1, 5);
 
 -- --------------------------------------------------------
 
@@ -128,17 +151,35 @@ CREATE TABLE `tagihan` (
 CREATE TABLE `transaksi` (
   `id_transaksi` int(11) NOT NULL,
   `id_pegawai` int(11) DEFAULT NULL,
-  `tgl_transaksi` date DEFAULT NULL,
-  `id_barang` int(11) DEFAULT NULL,
-  `jumlah` int(11) DEFAULT NULL
+  `tgl_transaksi` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `transaksi`
 --
 
-INSERT INTO `transaksi` (`id_transaksi`, `id_pegawai`, `tgl_transaksi`, `id_barang`, `jumlah`) VALUES
-(43, 1, '2020-05-08', 1, 5);
+INSERT INTO `transaksi` (`id_transaksi`, `id_pegawai`, `tgl_transaksi`) VALUES
+(44, 1, '2020-05-12'),
+(45, 1, '2020-05-12'),
+(46, 1, '2020-05-12'),
+(47, 1, '2020-05-12'),
+(48, 1, '2020-05-12'),
+(49, 1, '2020-05-12'),
+(50, 1, '2020-05-12'),
+(51, 1, '2020-05-12'),
+(52, 1, '2020-05-12'),
+(53, 1, '2020-05-12'),
+(54, 1, '2020-05-12'),
+(55, 1, '2020-05-12'),
+(56, 1, '2020-05-12'),
+(57, 1, '2020-05-12'),
+(58, 1, '2020-05-12'),
+(59, 1, '2020-05-12'),
+(60, 1, '2020-05-12'),
+(61, 1, '2020-05-12'),
+(62, 1, '2020-05-12'),
+(63, 1, '2020-05-12'),
+(64, 1, '2020-05-12');
 
 -- --------------------------------------------------------
 
@@ -168,6 +209,14 @@ INSERT INTO `type` (`id_type`, `nama_type`) VALUES
 ALTER TABLE `barang`
   ADD PRIMARY KEY (`id_barang`),
   ADD KEY `FK_dari_type` (`id_type`);
+
+--
+-- Indexes for table `detail`
+--
+ALTER TABLE `detail`
+  ADD PRIMARY KEY (`id_detail`),
+  ADD KEY `FK_Dari_Barang` (`id_barang`),
+  ADD KEY `FK_Dari_Tran` (`id_transaksi`);
 
 --
 -- Indexes for table `jabatan`
@@ -207,8 +256,7 @@ ALTER TABLE `tagihan`
 --
 ALTER TABLE `transaksi`
   ADD PRIMARY KEY (`id_transaksi`),
-  ADD KEY `FK_dari_pegawai` (`id_pegawai`),
-  ADD KEY `FK_dari_barang` (`id_barang`);
+  ADD KEY `FK_dari_pegawai` (`id_pegawai`);
 
 --
 -- Indexes for table `type`
@@ -227,6 +275,12 @@ ALTER TABLE `barang`
   MODIFY `id_barang` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
+-- AUTO_INCREMENT for table `detail`
+--
+ALTER TABLE `detail`
+  MODIFY `id_detail` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
 -- AUTO_INCREMENT for table `pegawai`
 --
 ALTER TABLE `pegawai`
@@ -242,7 +296,7 @@ ALTER TABLE `tagihan`
 -- AUTO_INCREMENT for table `transaksi`
 --
 ALTER TABLE `transaksi`
-  MODIFY `id_transaksi` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+  MODIFY `id_transaksi` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=65;
 
 --
 -- Constraints for dumped tables
@@ -253,6 +307,13 @@ ALTER TABLE `transaksi`
 --
 ALTER TABLE `barang`
   ADD CONSTRAINT `FK_dari_type` FOREIGN KEY (`id_type`) REFERENCES `type` (`id_type`);
+
+--
+-- Constraints for table `detail`
+--
+ALTER TABLE `detail`
+  ADD CONSTRAINT `FK_Dari_Barang` FOREIGN KEY (`id_barang`) REFERENCES `barang` (`id_barang`),
+  ADD CONSTRAINT `FK_Dari_Tran` FOREIGN KEY (`id_transaksi`) REFERENCES `transaksi` (`id_transaksi`);
 
 --
 -- Constraints for table `pegawai`
@@ -277,7 +338,6 @@ ALTER TABLE `tagihan`
 -- Constraints for table `transaksi`
 --
 ALTER TABLE `transaksi`
-  ADD CONSTRAINT `FK_dari_barang` FOREIGN KEY (`id_barang`) REFERENCES `barang` (`id_barang`),
   ADD CONSTRAINT `FK_dari_pegawai` FOREIGN KEY (`id_pegawai`) REFERENCES `pegawai` (`id_pegawai`);
 COMMIT;
 

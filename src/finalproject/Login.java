@@ -6,6 +6,7 @@
 package finalproject;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import javax.swing.JOptionPane;
@@ -18,6 +19,7 @@ public class Login extends javax.swing.JFrame {
     Connection con = koneksi.Koneksi.Koneksi();
     private ResultSet res;
     private Statement stat;
+    private PreparedStatement pst;
     public int pegawai;
 
     /**
@@ -128,6 +130,10 @@ public class Login extends javax.swing.JFrame {
                 if(jTextField1.getText().equals(res.getString("username_pegawai")) && jTextField2.getText().equals(res.getString("password_pegawai")))
                 {
                 JOptionPane.showMessageDialog(null,"Login Berhasil");
+                sql = "insert into transaksi value(null,"
+                        + this.pegawai + ",now());";
+                pst = con.prepareStatement(sql);
+                pst.execute();
                 dispose();
                 new Kasir(pegawai).setVisible(true);
                 }
