@@ -80,7 +80,6 @@ public class Gudang extends javax.swing.JFrame {
         jButton3 = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
         jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -194,13 +193,6 @@ public class Gudang extends javax.swing.JFrame {
             }
         });
 
-        jButton5.setText("Refresh");
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -227,10 +219,7 @@ public class Gudang extends javax.swing.JFrame {
                                     .addGap(35, 35, 35))
                                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                     .addComponent(jButton3)
-                                    .addGap(86, 86, 86))
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                    .addComponent(jButton5)
-                                    .addGap(75, 75, 75))))))
+                                    .addGap(86, 86, 86))))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -250,9 +239,7 @@ public class Gudang extends javax.swing.JFrame {
                         .addComponent(jButton2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton5)
-                        .addGap(16, 16, 16)
+                        .addGap(48, 48, 48)
                         .addComponent(jButton3))
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(48, 48, 48))
@@ -298,7 +285,21 @@ public class Gudang extends javax.swing.JFrame {
                     + this.gudang + ","
                     + Integer.parseInt(jTextField2.getText()) + ")";
             pst = con.prepareStatement(sql);
-            pst.execute();    
+            pst.execute();
+            jTextField1.setText(""); // saat sudah memasukkan barang
+            int i=0;
+            isitabel.setRowCount(0);
+            stat=con.createStatement();
+            sql = "select * from barang as b inner join type as t on b.id_type=t.id_type inner join gudang as g on b.id_barang=g.id_barang;";
+            res=stat.executeQuery(sql);
+            while(res.next()){
+                i++;
+                isitabel.addRow(new Object[]{i, res.getString("b.id_barang"),
+                    res.getString("b.nama_barang"), res.getString("t.nama_type"),
+                    res.getString("b.harga_beli"), res.getString("b.harga_jual"),
+                    res.getString("g.stock")});
+            }
+            jTable1.setModel(isitabel);
         }catch(Exception e){
             JOptionPane.showMessageDialog(null,"Terjadi Permasalahan di "+e);
         }
@@ -338,35 +339,12 @@ public class Gudang extends javax.swing.JFrame {
         new RiwayatGudang().setVisible(true);
     }//GEN-LAST:event_jButton4ActionPerformed
 
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        // TODO add your handling code here:
-        jTextField1.setText("");
-        try{
-            int i=0;
-            isitabel.setRowCount(0);
-            stat=con.createStatement();
-            sql = "select * from barang as b inner join type as t on b.id_type=t.id_type inner join gudang as g on b.id_barang=g.id_barang;";
-            res=stat.executeQuery(sql);
-            while(res.next()){
-                i++;
-                isitabel.addRow(new Object[]{i, res.getString("b.id_barang"),
-                    res.getString("b.nama_barang"), res.getString("t.nama_type"),
-                    res.getString("b.harga_beli"), res.getString("b.harga_jual"),
-                    res.getString("g.stock")});
-            }
-            jTable1.setModel(isitabel);
-        }catch(Exception e){
-            JOptionPane.showMessageDialog(null,"Terjadi Permasalahan di "+e);
-        }
-    }//GEN-LAST:event_jButton5ActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
