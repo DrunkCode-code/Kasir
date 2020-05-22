@@ -20,7 +20,7 @@ public class Login extends javax.swing.JFrame {
     private ResultSet res;
     private Statement stat;
     private PreparedStatement pst;
-    public int pegawai;
+    public int pegawai, jabatan;
 
     /**
      * Creates new form Login
@@ -126,6 +126,7 @@ public class Login extends javax.swing.JFrame {
             if(res.next())
             {
                 pegawai = res.getInt("id_pegawai");
+                jabatan = res.getInt("id_jabatan");
                 
                 if(jTextField1.getText().equals(res.getString("username_pegawai")) && jTextField2.getText().equals(res.getString("password_pegawai")))
                 {
@@ -135,7 +136,12 @@ public class Login extends javax.swing.JFrame {
                 pst = con.prepareStatement(sql);
                 pst.execute();
                 dispose();
-                new Kasir(pegawai).setVisible(true);
+                if(jabatan == 1){
+                    new Kasir(pegawai).setVisible(true);
+                    }
+                else if(jabatan == 2){
+                    new Gudang(pegawai).setVisible(true);
+                }
                 }
                 else
                 {

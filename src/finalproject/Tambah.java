@@ -145,7 +145,7 @@ public class Tambah extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 39, Short.MAX_VALUE)
+                .addGap(0, 35, Short.MAX_VALUE)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(31, 31, 31))
             .addGroup(layout.createSequentialGroup()
@@ -190,7 +190,7 @@ public class Tambah extends javax.swing.JFrame {
         try{
             isitabel.setRowCount(0);
             stat=con.createStatement();
-            sql = "select * from barang as b inner join type as t on b.id_type=t.id_type where b.nama_barang like '"
+            sql = "select * from barang as b inner join type as t on b.id_type=t.id_type where b.nama_barang like '%"
                     + cari + "%';";
             res=stat.executeQuery(sql);
             while(res.next()){

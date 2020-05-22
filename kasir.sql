@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 12, 2020 at 05:08 AM
+-- Generation Time: May 22, 2020 at 06:08 AM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.2
 
@@ -33,16 +33,15 @@ CREATE TABLE `barang` (
   `nama_barang` varchar(20) DEFAULT NULL,
   `id_type` int(11) DEFAULT NULL,
   `harga_beli` int(11) DEFAULT NULL,
-  `harga_jual` int(11) DEFAULT NULL,
-  `stock` int(11) DEFAULT NULL
+  `harga_jual` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `barang`
 --
 
-INSERT INTO `barang` (`id_barang`, `nama_barang`, `id_type`, `harga_beli`, `harga_jual`, `stock`) VALUES
-(1, 'Buku', 1, 2500, 4000, 20);
+INSERT INTO `barang` (`id_barang`, `nama_barang`, `id_type`, `harga_beli`, `harga_jual`) VALUES
+(9, 'buku', 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -57,15 +56,24 @@ CREATE TABLE `detail` (
   `jumlah` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- --------------------------------------------------------
+
 --
--- Dumping data for table `detail`
+-- Table structure for table `gudang`
 --
 
-INSERT INTO `detail` (`id_detail`, `id_transaksi`, `id_barang`, `jumlah`) VALUES
-(1, 44, 1, 10),
-(5, 60, 1, 5),
-(6, 61, 1, 2),
-(10, 63, 1, 5);
+CREATE TABLE `gudang` (
+  `id_gudang` int(11) NOT NULL,
+  `id_barang` int(11) DEFAULT NULL,
+  `stock` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `gudang`
+--
+
+INSERT INTO `gudang` (`id_gudang`, `id_barang`, `stock`) VALUES
+(1, 9, 14);
 
 -- --------------------------------------------------------
 
@@ -83,7 +91,8 @@ CREATE TABLE `jabatan` (
 --
 
 INSERT INTO `jabatan` (`id_jabatan`, `nama_jabatan`) VALUES
-(1, 'kasir');
+(1, 'kasir'),
+(2, 'Tukang Gudang');
 
 -- --------------------------------------------------------
 
@@ -116,7 +125,9 @@ CREATE TABLE `pegawai` (
 
 INSERT INTO `pegawai` (`id_pegawai`, `nama_pegawai`, `password_pegawai`, `id_jabatan`, `username_pegawai`) VALUES
 (1, 'Yuma Gunawan', 'K01', 1, 'K01'),
-(2, 'Andar Sakti', 'K02', 1, 'K02');
+(2, 'Andar Sakti', 'K02', 1, 'K02'),
+(5, 'Nathanael Richie', 'G01', 2, 'G01'),
+(6, 'Adryan Bhueka', 'G02', 2, 'G02');
 
 -- --------------------------------------------------------
 
@@ -128,6 +139,29 @@ CREATE TABLE `pembukuan` (
   `id_transaksi` int(11) DEFAULT NULL,
   `id_tagihan` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `riwayat_gudang`
+--
+
+CREATE TABLE `riwayat_gudang` (
+  `id_riwgud` int(11) NOT NULL,
+  `id_pegawai` int(11) DEFAULT NULL,
+  `tgl_masuk_barang` date DEFAULT NULL,
+  `id_gudang` int(11) DEFAULT NULL,
+  `penambahan` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `riwayat_gudang`
+--
+
+INSERT INTO `riwayat_gudang` (`id_riwgud`, `id_pegawai`, `tgl_masuk_barang`, `id_gudang`, `penambahan`) VALUES
+(1, 5, '2020-05-22', 1, 10),
+(2, 5, '2020-05-22', 1, 2),
+(3, 5, '2020-05-22', 1, 2);
 
 -- --------------------------------------------------------
 
@@ -159,27 +193,26 @@ CREATE TABLE `transaksi` (
 --
 
 INSERT INTO `transaksi` (`id_transaksi`, `id_pegawai`, `tgl_transaksi`) VALUES
-(44, 1, '2020-05-12'),
-(45, 1, '2020-05-12'),
-(46, 1, '2020-05-12'),
-(47, 1, '2020-05-12'),
-(48, 1, '2020-05-12'),
-(49, 1, '2020-05-12'),
-(50, 1, '2020-05-12'),
-(51, 1, '2020-05-12'),
-(52, 1, '2020-05-12'),
-(53, 1, '2020-05-12'),
-(54, 1, '2020-05-12'),
-(55, 1, '2020-05-12'),
-(56, 1, '2020-05-12'),
-(57, 1, '2020-05-12'),
-(58, 1, '2020-05-12'),
-(59, 1, '2020-05-12'),
-(60, 1, '2020-05-12'),
-(61, 1, '2020-05-12'),
-(62, 1, '2020-05-12'),
-(63, 1, '2020-05-12'),
-(64, 1, '2020-05-12');
+(66, 5, '2020-05-21'),
+(67, 6, '2020-05-22'),
+(68, 6, '2020-05-22'),
+(69, 6, '2020-05-22'),
+(70, 5, '2020-05-22'),
+(71, 5, '2020-05-22'),
+(72, 5, '2020-05-22'),
+(73, 5, '2020-05-22'),
+(74, 5, '2020-05-22'),
+(75, 5, '2020-05-22'),
+(76, 5, '2020-05-22'),
+(77, 5, '2020-05-22'),
+(78, 5, '2020-05-22'),
+(79, 5, '2020-05-22'),
+(80, 5, '2020-05-22'),
+(81, 5, '2020-05-22'),
+(82, 5, '2020-05-22'),
+(83, 5, '2020-05-22'),
+(84, 5, '2020-05-22'),
+(85, 5, '2020-05-22');
 
 -- --------------------------------------------------------
 
@@ -197,7 +230,8 @@ CREATE TABLE `type` (
 --
 
 INSERT INTO `type` (`id_type`, `nama_type`) VALUES
-(1, 'buah');
+(1, 'buah'),
+(2, 'lusin');
 
 --
 -- Indexes for dumped tables
@@ -217,6 +251,13 @@ ALTER TABLE `detail`
   ADD PRIMARY KEY (`id_detail`),
   ADD KEY `FK_Dari_Barang` (`id_barang`),
   ADD KEY `FK_Dari_Tran` (`id_transaksi`);
+
+--
+-- Indexes for table `gudang`
+--
+ALTER TABLE `gudang`
+  ADD PRIMARY KEY (`id_gudang`),
+  ADD KEY `dari barang` (`id_barang`);
 
 --
 -- Indexes for table `jabatan`
@@ -243,6 +284,14 @@ ALTER TABLE `pegawai`
 ALTER TABLE `pembukuan`
   ADD KEY `FK_dari_transaksi` (`id_transaksi`),
   ADD KEY `FK_dari_tagihan` (`id_tagihan`);
+
+--
+-- Indexes for table `riwayat_gudang`
+--
+ALTER TABLE `riwayat_gudang`
+  ADD PRIMARY KEY (`id_riwgud`),
+  ADD KEY `ke pegawai` (`id_pegawai`),
+  ADD KEY `dari gudang` (`id_gudang`);
 
 --
 -- Indexes for table `tagihan`
@@ -272,19 +321,31 @@ ALTER TABLE `type`
 -- AUTO_INCREMENT for table `barang`
 --
 ALTER TABLE `barang`
-  MODIFY `id_barang` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_barang` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `detail`
 --
 ALTER TABLE `detail`
-  MODIFY `id_detail` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id_detail` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
+--
+-- AUTO_INCREMENT for table `gudang`
+--
+ALTER TABLE `gudang`
+  MODIFY `id_gudang` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `pegawai`
 --
 ALTER TABLE `pegawai`
-  MODIFY `id_pegawai` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_pegawai` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `riwayat_gudang`
+--
+ALTER TABLE `riwayat_gudang`
+  MODIFY `id_riwgud` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `tagihan`
@@ -296,7 +357,7 @@ ALTER TABLE `tagihan`
 -- AUTO_INCREMENT for table `transaksi`
 --
 ALTER TABLE `transaksi`
-  MODIFY `id_transaksi` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=65;
+  MODIFY `id_transaksi` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=86;
 
 --
 -- Constraints for dumped tables
@@ -316,6 +377,12 @@ ALTER TABLE `detail`
   ADD CONSTRAINT `FK_Dari_Tran` FOREIGN KEY (`id_transaksi`) REFERENCES `transaksi` (`id_transaksi`);
 
 --
+-- Constraints for table `gudang`
+--
+ALTER TABLE `gudang`
+  ADD CONSTRAINT `dari barang` FOREIGN KEY (`id_barang`) REFERENCES `barang` (`id_barang`);
+
+--
 -- Constraints for table `pegawai`
 --
 ALTER TABLE `pegawai`
@@ -327,6 +394,13 @@ ALTER TABLE `pegawai`
 ALTER TABLE `pembukuan`
   ADD CONSTRAINT `FK_dari_tagihan` FOREIGN KEY (`id_tagihan`) REFERENCES `tagihan` (`id_tagihan`),
   ADD CONSTRAINT `FK_dari_transaksi` FOREIGN KEY (`id_transaksi`) REFERENCES `transaksi` (`id_transaksi`);
+
+--
+-- Constraints for table `riwayat_gudang`
+--
+ALTER TABLE `riwayat_gudang`
+  ADD CONSTRAINT `dari gudang` FOREIGN KEY (`id_gudang`) REFERENCES `gudang` (`id_gudang`),
+  ADD CONSTRAINT `ke pegawai` FOREIGN KEY (`id_pegawai`) REFERENCES `pegawai` (`id_pegawai`);
 
 --
 -- Constraints for table `tagihan`
