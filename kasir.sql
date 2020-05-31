@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 22, 2020 at 06:08 AM
+-- Generation Time: May 31, 2020 at 04:24 PM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.2
 
@@ -41,7 +41,8 @@ CREATE TABLE `barang` (
 --
 
 INSERT INTO `barang` (`id_barang`, `nama_barang`, `id_type`, `harga_beli`, `harga_jual`) VALUES
-(9, 'buku', 1, NULL, NULL);
+(11, 'Buku', 1, 5000, 7000),
+(12, 'Pulpen', 1, 700, 1200);
 
 -- --------------------------------------------------------
 
@@ -53,7 +54,8 @@ CREATE TABLE `detail` (
   `id_detail` int(11) NOT NULL,
   `id_transaksi` int(11) DEFAULT NULL,
   `id_barang` int(11) DEFAULT NULL,
-  `jumlah` int(11) DEFAULT NULL
+  `jumlah` int(11) DEFAULT NULL,
+  `harga` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -73,7 +75,8 @@ CREATE TABLE `gudang` (
 --
 
 INSERT INTO `gudang` (`id_gudang`, `id_barang`, `stock`) VALUES
-(1, 9, 14);
+(3, 11, 8),
+(4, 12, 5);
 
 -- --------------------------------------------------------
 
@@ -92,7 +95,8 @@ CREATE TABLE `jabatan` (
 
 INSERT INTO `jabatan` (`id_jabatan`, `nama_jabatan`) VALUES
 (1, 'kasir'),
-(2, 'Tukang Gudang');
+(2, 'Tukang Gudang'),
+(3, 'Manager');
 
 -- --------------------------------------------------------
 
@@ -116,29 +120,22 @@ CREATE TABLE `pegawai` (
   `nama_pegawai` varchar(20) DEFAULT NULL,
   `password_pegawai` varchar(20) DEFAULT NULL,
   `id_jabatan` int(11) DEFAULT NULL,
-  `username_pegawai` varchar(20) NOT NULL
+  `username_pegawai` varchar(20) NOT NULL,
+  `status_pegawai` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `pegawai`
 --
 
-INSERT INTO `pegawai` (`id_pegawai`, `nama_pegawai`, `password_pegawai`, `id_jabatan`, `username_pegawai`) VALUES
-(1, 'Yuma Gunawan', 'K01', 1, 'K01'),
-(2, 'Andar Sakti', 'K02', 1, 'K02'),
-(5, 'Nathanael Richie', 'G01', 2, 'G01'),
-(6, 'Adryan Bhueka', 'G02', 2, 'G02');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `pembukuan`
---
-
-CREATE TABLE `pembukuan` (
-  `id_transaksi` int(11) DEFAULT NULL,
-  `id_tagihan` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+INSERT INTO `pegawai` (`id_pegawai`, `nama_pegawai`, `password_pegawai`, `id_jabatan`, `username_pegawai`, `status_pegawai`) VALUES
+(1, 'Yuma Gunawan', 'K01', 1, 'K01', 0),
+(2, 'Andar Sakti', 'K02', 1, 'K02', 1),
+(5, 'Nathanael Richie', 'G01', 2, 'G01', 1),
+(6, 'Adryan Bhueka', 'G02', 2, 'G02', 1),
+(7, 'Dwiki Budilaksana', 'M01', 3, 'M01', 1),
+(8, 'Edo Krishnanda', 'M02', 3, 'M02', 1),
+(9, 'Fizi', 'K03', 1, 'K03', 1);
 
 -- --------------------------------------------------------
 
@@ -159,9 +156,28 @@ CREATE TABLE `riwayat_gudang` (
 --
 
 INSERT INTO `riwayat_gudang` (`id_riwgud`, `id_pegawai`, `tgl_masuk_barang`, `id_gudang`, `penambahan`) VALUES
-(1, 5, '2020-05-22', 1, 10),
-(2, 5, '2020-05-22', 1, 2),
-(3, 5, '2020-05-22', 1, 2);
+(5, 7, '2020-05-31', 3, 3),
+(6, 7, '2020-05-31', 3, 5),
+(7, 7, '2020-05-31', 4, 5);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `stat_pegawai`
+--
+
+CREATE TABLE `stat_pegawai` (
+  `id_stat_pegawai` int(11) DEFAULT NULL,
+  `nama_stat_pegawai` varchar(10) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `stat_pegawai`
+--
+
+INSERT INTO `stat_pegawai` (`id_stat_pegawai`, `nama_stat_pegawai`) VALUES
+(1, 'aktif'),
+(0, 'nonaktif');
 
 -- --------------------------------------------------------
 
@@ -212,7 +228,11 @@ INSERT INTO `transaksi` (`id_transaksi`, `id_pegawai`, `tgl_transaksi`) VALUES
 (82, 5, '2020-05-22'),
 (83, 5, '2020-05-22'),
 (84, 5, '2020-05-22'),
-(85, 5, '2020-05-22');
+(85, 5, '2020-05-22'),
+(86, 5, '2020-05-22'),
+(87, 7, '2020-05-29'),
+(88, 7, '2020-05-30'),
+(89, 1, '2020-05-30');
 
 -- --------------------------------------------------------
 
@@ -279,13 +299,6 @@ ALTER TABLE `pegawai`
   ADD KEY `FK_dari_jabatan` (`id_jabatan`);
 
 --
--- Indexes for table `pembukuan`
---
-ALTER TABLE `pembukuan`
-  ADD KEY `FK_dari_transaksi` (`id_transaksi`),
-  ADD KEY `FK_dari_tagihan` (`id_tagihan`);
-
---
 -- Indexes for table `riwayat_gudang`
 --
 ALTER TABLE `riwayat_gudang`
@@ -321,7 +334,7 @@ ALTER TABLE `type`
 -- AUTO_INCREMENT for table `barang`
 --
 ALTER TABLE `barang`
-  MODIFY `id_barang` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id_barang` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `detail`
@@ -333,19 +346,19 @@ ALTER TABLE `detail`
 -- AUTO_INCREMENT for table `gudang`
 --
 ALTER TABLE `gudang`
-  MODIFY `id_gudang` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_gudang` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `pegawai`
 --
 ALTER TABLE `pegawai`
-  MODIFY `id_pegawai` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_pegawai` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `riwayat_gudang`
 --
 ALTER TABLE `riwayat_gudang`
-  MODIFY `id_riwgud` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_riwgud` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `tagihan`
@@ -357,7 +370,7 @@ ALTER TABLE `tagihan`
 -- AUTO_INCREMENT for table `transaksi`
 --
 ALTER TABLE `transaksi`
-  MODIFY `id_transaksi` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=86;
+  MODIFY `id_transaksi` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=90;
 
 --
 -- Constraints for dumped tables
@@ -387,13 +400,6 @@ ALTER TABLE `gudang`
 --
 ALTER TABLE `pegawai`
   ADD CONSTRAINT `FK_dari_jabatan` FOREIGN KEY (`id_jabatan`) REFERENCES `jabatan` (`id_jabatan`);
-
---
--- Constraints for table `pembukuan`
---
-ALTER TABLE `pembukuan`
-  ADD CONSTRAINT `FK_dari_tagihan` FOREIGN KEY (`id_tagihan`) REFERENCES `tagihan` (`id_tagihan`),
-  ADD CONSTRAINT `FK_dari_transaksi` FOREIGN KEY (`id_transaksi`) REFERENCES `transaksi` (`id_transaksi`);
 
 --
 -- Constraints for table `riwayat_gudang`
