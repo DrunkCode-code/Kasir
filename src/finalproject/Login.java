@@ -131,17 +131,20 @@ public class Login extends javax.swing.JFrame {
                 if(jTextField1.getText().equals(res.getString("username_pegawai")) && jTextField2.getText().equals(res.getString("password_pegawai")))
                 {
                 JOptionPane.showMessageDialog(null,"Login Berhasil");
-                sql = "insert into transaksi value(null,"
-                        + this.pegawai + ",now());";
-                pst = con.prepareStatement(sql);
-                pst.execute();
                 dispose();
                 if(jabatan == 1){
+                    sql = "insert into transaksi value(null,"
+                            + this.pegawai + ",now());";
+                    pst = con.prepareStatement(sql);
+                    pst.execute();
                     new Kasir(pegawai).setVisible(true);
                     }
                 else if(jabatan == 2){
                     new Gudang(pegawai).setVisible(true);
-                }
+                    }
+                else if(jabatan == 3){
+                    new Manager(pegawai).setVisible(true);
+                    }
                 }
                 else
                 {

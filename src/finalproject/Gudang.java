@@ -35,7 +35,7 @@ public class Gudang extends javax.swing.JFrame {
      */
     public Gudang(int pegawai) {
         initComponents();
-                this.pegawai=pegawai;
+        this.pegawai=pegawai;
         try{
             stat=con.createStatement();
             sql = "select * from pegawai where id_pegawai = " + this.pegawai + ";";

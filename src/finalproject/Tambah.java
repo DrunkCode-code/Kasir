@@ -22,7 +22,7 @@ public class Tambah extends javax.swing.JFrame {
     private Statement stat;
     private PreparedStatement pst;
     String sql;
-    int transaksi, barang, jumlah;
+    int transaksi, barang, jumlah, harga;
     private DefaultTableModel isitabel=new DefaultTableModel(){
         @Override
         public boolean isCellEditable(int row, int column){
@@ -209,6 +209,7 @@ public class Tambah extends javax.swing.JFrame {
         // TODO add your handling code here:
             int row = jTable1.getSelectedRow();
             this.barang = Integer.parseInt(jTable1.getValueAt(row, 1).toString());
+            this.harga = Integer.parseInt(jTable1.getValueAt(row, 4).toString());
             jLabel4.setText(jTable1.getValueAt(row, 2).toString());
     }//GEN-LAST:event_jTable1MouseClicked
 
@@ -234,7 +235,7 @@ public class Tambah extends javax.swing.JFrame {
                 sql = "insert into detail value(null,"
                     + this.transaksi + "," 
                     + this.barang + ","
-                    + Integer.parseInt(jTextField2.getText()) + ")";
+                    + Integer.parseInt(jTextField2.getText()) + this.harga + ")";
             pst = con.prepareStatement(sql);
             pst.execute();
             dispose();
