@@ -259,6 +259,12 @@ public class Manager extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        jPanel1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jPanel1MouseEntered(evt);
+            }
+        });
+
         jPanel6.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         jLabel2.setText("N");
@@ -359,6 +365,11 @@ public class Manager extends javax.swing.JFrame {
         );
 
         jButton1.setText("Bayar Tagihan");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jLabel6.setText("Manager");
 
@@ -377,10 +388,20 @@ public class Manager extends javax.swing.JFrame {
         });
 
         jButton11.setText("Pengeluaran");
+        jButton11.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton11ActionPerformed(evt);
+            }
+        });
 
         jLabel22.setText("Nama Manager");
 
         jButton12.setText("Kasir");
+        jButton12.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton12ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -1051,6 +1072,41 @@ public class Manager extends javax.swing.JFrame {
         // TODO add your handling code here:
         new Pemasukan().setVisible(true);
     }//GEN-LAST:event_jButton10ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        new Tagihan(pegawai).setVisible(true);
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jPanel1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel1MouseEntered
+        // TODO add your handling code here:
+        try{
+            stat=con.createStatement();
+            sql = "select sum(jumlah*harga) as hasil from detail";
+            res=stat.executeQuery(sql);
+            if(!res.next()){
+                pendapatan = 0;
+            }
+            else{
+                pendapatan = res.getInt("hasil");
+            }
+            jLabel27.setText("Rp. " + Integer.toString(pendapatan));
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null,"Terjadi Permasalahan di "+e);
+        }
+        tampilpengeluaran();
+        tampilprofit();
+    }//GEN-LAST:event_jPanel1MouseEntered
+
+    private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
+        // TODO add your handling code here:
+        new Pengeluaran().setVisible(true);
+    }//GEN-LAST:event_jButton11ActionPerformed
+
+    private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton12ActionPerformed
+        // TODO add your handling code here:
+        new Kasir(pegawai).setVisible(true);
+    }//GEN-LAST:event_jButton12ActionPerformed
 
     /**
      * @param args the command line arguments
