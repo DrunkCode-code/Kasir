@@ -22,7 +22,7 @@ public class Tambah extends javax.swing.JFrame {
     private Statement stat;
     private PreparedStatement pst;
     String sql;
-    int transaksi, barang, jumlah, harga;
+    int transaksi, barang, jumlah, harga, stock;
     private DefaultTableModel isitabel=new DefaultTableModel(){
         @Override
         public boolean isCellEditable(int row, int column){
@@ -217,10 +217,15 @@ public class Tambah extends javax.swing.JFrame {
         // TODO add your handling code here:
         try{
             stat=con.createStatement();
+            sql = "select * from gudang where id_barang = "
+                    + this.barang;
+            res=stat.executeQuery(sql);
+            this.stock = res.getInt("stock");
             sql = "select * from detail where id_barang = "
                     + this.barang + " and id_transaksi = " 
                     + this.transaksi + ";";
             res=stat.executeQuery(sql);
+
             if(res.next()){
                 this.jumlah = res.getInt("jumlah");
                 jumlah = jumlah + Integer.parseInt(jTextField2.getText());
@@ -230,15 +235,28 @@ public class Tambah extends javax.swing.JFrame {
                         + this.transaksi + ";";
                 pst = con.prepareStatement(sql);
                 pst.execute();
+                stock = stock - Integer.parseInt(jTextField2.getText());
+                sql = "update gudang set stock = "
+                        + this.stock + " where id_barang = "
+                        + this.barang;
+                pst = con.prepareStatement(sql);
+                pst.execute();
                 dispose();
             }else{
                 sql = "insert into detail value(null,"
-                    + this.transaksi + "," 
-                    + this.barang + ","
-                    + Integer.parseInt(jTextField2.getText()) + this.harga + ")";
-            pst = con.prepareStatement(sql);
-            pst.execute();
-            dispose();
+                    + this.transaksi + ", " 
+                    + this.barang + ", "
+                    + Integer.parseInt(jTextField2.getText()) + ", "
+                    + this.harga + ")";
+                pst = con.prepareStatement(sql);
+                pst.execute();
+                stock = stock - Integer.parseInt(jTextField2.getText());
+                sql = "update gudang set stock = "
+                        + this.stock + " where id_barang = "
+                        + this.barang;
+                pst = con.prepareStatement(sql);
+                pst.execute();
+                dispose();
             }
         }catch(Exception e){
             JOptionPane.showMessageDialog(null,"Terjadi Permasalahan di "+e);

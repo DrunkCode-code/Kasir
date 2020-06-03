@@ -69,7 +69,7 @@ public class Manager extends javax.swing.JFrame {
     }
     
     private void tampiltransaksi(){
-        int total = 0, pemasukan = 0, transaksi = -1;
+        int pemasukan = 0, transaksi = -1;
         DefaultTableModel isitabel2=new DefaultTableModel(){
             @Override
             public boolean isCellEditable(int row, int column){
@@ -85,21 +85,16 @@ public class Manager extends javax.swing.JFrame {
         try{
             i=0;
             stat=con.createStatement();
-            sql = "select * from detail as d inner join transaksi as t on d.id_transaksi=t.id_transaksi inner join pegawai as p on t.id_pegawai=p.id_pegawai inner join jabatan as j on p.id_jabatan=j.id_jabatan;";
+            sql = "select *, sum(d.jumlah*d.harga) as total from detail as d inner join transaksi as t on d.id_transaksi=t.id_transaksi inner join pegawai as p on t.id_pegawai=p.id_pegawai inner join jabatan as j on p.id_jabatan=j.id_jabatan group by t.id_transaksi;";
             res=stat.executeQuery(sql);
             while(res.next()){
                 i++;
-                total = total + ((res.getInt("d.jumlah"))*(res.getInt("d.harga")));
-                pemasukan = pemasukan + total;
-                if(transaksi != res.getInt("t.id_transaksi")){
-                    total = 0;
-                    transaksi = res.getInt("t.id_transaksi");
-                }
+                pemasukan = pemasukan + res.getInt("total");
                 isitabel2.addRow(new Object[]{i, res.getString("t.id_transaksi"), 
                     res.getString("p.nama_pegawai"), res.getString("j.nama_jabatan"),
-                    res.getString("t.tgl_transaksi"), total});
+                    res.getString("t.tgl_transaksi"), res.getString("total")});
             }
-            jTable2.setModel(isitabel1);
+            jTable2.setModel(isitabel2);
             jLabel25.setText(Integer.toString(i));
             jLabel26.setText("Rp. " + Integer.toString(pemasukan));
             }
@@ -1105,6 +1100,14 @@ public class Manager extends javax.swing.JFrame {
 
     private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton12ActionPerformed
         // TODO add your handling code here:
+        try{  
+        sql = "insert into transaksi value(null,"
+                + this.pegawai + ",now());";
+        pst = con.prepareStatement(sql);
+        pst.execute();
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null,"Terjadi Permasalahan di "+e);
+        }
         new Kasir(pegawai).setVisible(true);
     }//GEN-LAST:event_jButton12ActionPerformed
 
