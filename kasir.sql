@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 02, 2020 at 04:48 PM
+-- Generation Time: Jun 03, 2020 at 06:14 PM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.2
 
@@ -119,6 +119,14 @@ CREATE TABLE `jenis` (
   `nama_jenis` varchar(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `jenis`
+--
+
+INSERT INTO `jenis` (`id_jenis`, `nama_jenis`) VALUES
+(1, 'air'),
+(2, 'listrik');
+
 -- --------------------------------------------------------
 
 --
@@ -203,6 +211,16 @@ CREATE TABLE `tagihan` (
   `tanggal_tagihan` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `tagihan`
+--
+
+INSERT INTO `tagihan` (`id_tagihan`, `id_pegawai`, `id_jenis`, `biaya`, `tanggal_tagihan`) VALUES
+(1, 7, 1, 5000, '2020-06-03'),
+(2, 7, 1, 5000, '2020-06-03'),
+(3, 7, 1, 5000, '2020-06-03'),
+(4, 7, 1, 5000, '2020-06-03');
+
 -- --------------------------------------------------------
 
 --
@@ -222,7 +240,13 @@ CREATE TABLE `transaksi` (
 INSERT INTO `transaksi` (`id_transaksi`, `id_pegawai`, `tgl_transaksi`) VALUES
 (90, 2, '2020-06-02'),
 (92, 2, '2020-06-02'),
-(93, 2, '2020-06-01');
+(93, 2, '2020-06-01'),
+(94, 1, '2020-06-03'),
+(95, 2, '2020-06-03'),
+(96, 7, '2020-06-03'),
+(97, 2, '2020-06-03'),
+(98, 2, '2020-06-03'),
+(99, 2, '2020-06-03');
 
 -- --------------------------------------------------------
 
@@ -330,7 +354,7 @@ ALTER TABLE `barang`
 -- AUTO_INCREMENT for table `detail`
 --
 ALTER TABLE `detail`
-  MODIFY `id_detail` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id_detail` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `gudang`
@@ -354,13 +378,13 @@ ALTER TABLE `riwayat_gudang`
 -- AUTO_INCREMENT for table `tagihan`
 --
 ALTER TABLE `tagihan`
-  MODIFY `id_tagihan` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_tagihan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `transaksi`
 --
 ALTER TABLE `transaksi`
-  MODIFY `id_transaksi` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=94;
+  MODIFY `id_transaksi` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=100;
 
 --
 -- Constraints for dumped tables
